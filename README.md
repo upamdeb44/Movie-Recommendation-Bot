@@ -1,4 +1,4 @@
-# CineMatrix
+# PickFlicx
 
 An advanced, full-stack cinematic recommendation platform powered by a custom Content-Based Filtering machine learning model. Designed with a premium, responsive "bento-box" user interface, this application allows users to securely register an account, discover highly personalized movie recommendations, analyze the structural algorithms behind those recommendations, and curate a persistent digital library of their favorite films.
 
