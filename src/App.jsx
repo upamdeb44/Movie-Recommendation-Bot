@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AuthPage from './components/AuthPage';
 import Sidebar from './components/Sidebar';
@@ -6,42 +6,55 @@ import DashboardHome from './components/DashboardHome';
 import RecommendPage from './components/RecommendPage';
 import MovieDNAPage from './components/MovieDnaPage';
 import HistoryPage from './components/HistoryPage';
-import MovieBFFPage from './components/MovieBFFPage';
-
-// Placeholder for future dedicated pages
-const Placeholder = ({ title }) => <div className="p-10 text-3xl font-bold text-white">{title}</div>;
+import FavoritesPage from './components/FavoritesPage';
 
 export default function App() {
-  const [auth, setAuth] = useState(localStorage.getItem('isAuthenticated') === 'true');
+  // THE FIX: We now explicitly check for the secure 'movieBotToken' the exact millisecond the app reloads
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('movieBotToken') !== null;
+  });
 
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    setAuth(false);
+  // This specific function serves as the unlocking mechanism, allowing the AuthPage to signal the App that a login was successful
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
   };
 
-  // If not authenticated, only show AuthPage
-  if (!auth) {
+  // This function serves as the secure logout mechanism, destroying the encrypted tokens and instantly revoking dashboard access
+  const handleLogout = () => {
+    localStorage.removeItem('movieBotToken');
+    localStorage.removeItem('isAuthenticated'); // We clear this just to keep the browser storage perfectly clean
+    setIsAuthenticated(false);
+  };
+
+  // The Gatekeeper: If the user has not been securely authenticated, completely restrict their access to the primary application routes
+  if (!isAuthenticated) {
     return (
       <Routes>
-        <Route path="*" element={<AuthPage setAuth={setAuth} />} />
+        <Route path="*" element={<AuthPage setAuth={handleLoginSuccess} onLoginSuccess={handleLoginSuccess} />} />
       </Routes>
     );
   }
 
-  // Dashboard Layout for Authenticated Users
+  // The VIP Area: If the security clearance is verified, render the comprehensive cinematic dashboard and its corresponding multi-page components
   return (
-    <div className="flex min-h-screen bg-[#0b0f19]">
+    <div className="flex h-screen bg-[#0b0f19] text-white overflow-hidden">
+      
+      {/* The Sidebar is rendered globally for authenticated users, and we pass down the secure logout mechanism as a functional prop */}
       <Sidebar onLogout={handleLogout} />
-      <main className="flex-1 overflow-y-auto">
-      <Routes>
-      <Route path="/" element={<DashboardHome />} />
-      <Route path="/recommend" element={<RecommendPage />} />
-      <Route path="/dna" element={<MovieDNAPage />} />
-      <Route path="/bff" element={<MovieBFFPage />} />
-      <Route path="/history" element={<HistoryPage />} />
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+      
+      <main className="flex-1 overflow-y-auto p-8 relative">
+        <Routes>
+          <Route path="/" element={<DashboardHome />} />
+          <Route path="/recommend" element={<RecommendPage />} />
+          <Route path="/dna" element={<MovieDNAPage />} />
+          <Route path="/history" element={<HistoryPage />} />
+          <Route path="/favorites" element={<FavoritesPage />} />
+          
+          {/* If an authenticated user attempts to access a broken or non-existent URL, automatically redirect them safely back to the dashboard */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
+      
     </div>
   );
 }

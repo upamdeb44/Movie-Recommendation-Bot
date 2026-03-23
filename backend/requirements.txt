@@ -20,4 +20,8 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 tzdata==2025.3
 urllib3==2.6.3
+<<<<<<< HEAD
 uvicorn==0.42.0
+=======
+uvicorn==0.42.0
+>>>>>>> cae864e (final commit with authentication, favorites, movieDNA and history)
