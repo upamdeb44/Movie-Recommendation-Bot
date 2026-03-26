@@ -19,7 +19,7 @@ export default function Sidebar({ onLogout }) {
           <Film className="w-7 h-7 text-white" />
         </div>
         <h2 className="text-2xl font-extrabold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
-          CinemIQ
+          PickFlicx 
         </h2>
       </div>
 
