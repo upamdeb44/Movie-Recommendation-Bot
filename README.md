@@ -33,3 +33,16 @@ This project strictly adheres to a decoupled, headless architecture to ensure ma
 * Pandas & Scikit-Learn (Machine Learning Matrix Computations)
 * PyJWT & Passlib (Cryptographic Token Generation)
 * Requests (External API Communication)
+
+## How To Run The Project
+To run this project entirely locally based off of your machine, run these commands on the windows terminal (Powershell).
+* `git clone https://github.com/upamdeb44/PickFlicx`
+* `cd PickFlicx`
+* Create a .env file
+* Paste your personal TMDB_API_KEY into the .env file created
+* `pip install -r requirements.txt`
+* `python -m venv venv` to create a fresh virtual environment
+* `venv\Scripts\activate` to run the virtual environment
+* Finally run the backend server with `uvicorn main:app --reload`
+* Open another terminal in vs code and type `npm install`
+* `npm run dev` to run the frontend
